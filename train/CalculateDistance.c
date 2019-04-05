@@ -7,7 +7,7 @@
 
 typedef struct DistanceCalArg
 {
-	const double *pCenterPoint;
+	double *pCenterPoint;
 	double *pOtherPoint;
 	double *pRet;
 	unsigned int pVecDimension;
@@ -24,9 +24,9 @@ void *EuclideanDistance(void *arg)
 	//printf("\n");
 	return NULL;
 }
-double *CalculateDistanceMT(double **pTrainSampleFeatureVec,unsigned int pRow,unsigned int pCol,const double *pPoint)
+unsigned int CalculateDistanceMT(double **pTrainSampleFeatureVec,unsigned int pRow,unsigned int pCol,double *pPoint)
 {
-	double *RetDistanceVal =(double *)malloc(sizeof(double)*pRow);
+	double *RetDistanceVal =(double *)malloc(sizeof(double)*pRow); //可以优化，把RetDistanceVal当作参数传进来
 	
 	pthread_t * pThreadVec = (pthread_t *)malloc(sizeof(pthread_t)*pRow);
 	
@@ -44,8 +44,21 @@ double *CalculateDistanceMT(double **pTrainSampleFeatureVec,unsigned int pRow,un
 	{
 		pthread_join(pThreadVec[j],NULL);
 	}
-	
+	free(pThreadVec);
+	pThreadVec=NULL;
 	free(ArgVec);
 	ArgVec=NULL;
-	return RetDistanceVal;
+	unsigned int pMinIndex=0;
+	double pMinDistance = RetDistanceVal[0];
+	for (unsigned int k = 1; k < pRow; ++k)
+	{
+		if(RetDistanceVal[k]<pMinDistance)
+		{
+			pMinDistance = RetDistanceVal[k];
+			pMinIndex=k;
+		}
+	}
+	free(RetDistanceVal);
+	RetDistanceVal=NULL;
+	return pMinIndex;
 }

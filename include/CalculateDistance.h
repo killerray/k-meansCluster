@@ -1,4 +1,5 @@
 #ifndef _CALCULATEDISTANCE_H_
 #define _CALCULATEDISTANCE_H_
-double *CalculateDistanceMT(double **pTrainSampleFeatureVec,unsigned int pRow,unsigned int pCol,const double *pPoint);
+void *EuclideanDistance(void *arg);
+unsigned int CalculateDistanceMT(double **pTrainSampleFeatureVec,unsigned int pRow,unsigned int pCol,double *pPoint);
 #endif
