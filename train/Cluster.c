@@ -27,7 +27,10 @@ static void GetKmeans(ClusterCenter *pClusterVec,unsigned int pKval,unsigned int
 	{
 		for (unsigned int j = 0; j < pCol; ++j)
 		{
-			(pClusterVec[i].pAccumulation[j])/=(double)pClusterVec[i].pAccumulationNum;
+			if(0!=pClusterVec[i].pAccumulationNum)
+			{
+				(pClusterVec[i].pAccumulation[j])/=(double)pClusterVec[i].pAccumulationNum;
+			}
 		}
 	}
 }
@@ -92,7 +95,7 @@ double **GetClusterCenter(double **pTrainSampleFeatureVec,unsigned int pRow,unsi
 		pCenterPointVec[i]=pTemp1;
 	}
 
-	/*for (unsigned int i = 0; i < pKval; ++i)
+	for (unsigned int i = 0; i < pKval; ++i)
 	{
 		for (unsigned int j = 0; j < pCol; ++j)
 		{
@@ -100,7 +103,8 @@ double **GetClusterCenter(double **pTrainSampleFeatureVec,unsigned int pRow,unsi
 		}
 		printf("%d\n",pClusterCenterVec[i].pAccumulationNum);
 	}
-	return NULL;*/
+
+	printf("\n\n");
 
 	unsigned int pIndex=0;
 
