@@ -19,6 +19,8 @@ int main(int argc,char **argv)
 	//double *DistanceResult=NULL;
 	unsigned int * RandomNumVec=NULL;
 
+	double **CenterPoint=NULL;
+
 	TrainSampleFeatureVec=ReadFile(argv[1],atoi(argv[2]),atoi(argv[3]),&TrainSampleClassVec);
 	double *pTemp = (double*)malloc(sizeof(double)*atoi(argv[3]));
 	memset(pTemp,0,atoi(argv[3])*(sizeof(double)/sizeof(int)));
@@ -32,8 +34,15 @@ int main(int argc,char **argv)
 
 	printf("\n");
 
-	GetClusterCenter(TrainSampleFeatureVec,atoi(argv[2]),atoi(argv[3]),RandomNumVec,atoi(argv[4]),atoi(argv[5]));
-	
+	CenterPoint = GetClusterCenter(TrainSampleFeatureVec,atoi(argv[2]),atoi(argv[3]),RandomNumVec,atoi(argv[4]),atoi(argv[5]));
+	for (unsigned int i = 0; i < atoi(argv[4]) ; ++i)
+	{
+		for (unsigned int j = 0; j < atoi(argv[3]); ++j)
+		{
+			printf("%lf\t",CenterPoint[i][j]);
+		}
+		printf("\n");
+	}
 	
 	
 	//for(unsigned int m=0;m!=atoi(argv[2]);++m)
@@ -44,6 +53,7 @@ int main(int argc,char **argv)
 	FreeFile(TrainSampleFeatureVec,atoi(argv[2]),atoi(argv[3]),TrainSampleClassVec);
 	//free(DistanceResult);
 	//DistanceResult=NULL;
+	FreeFile(CenterPoint,atoi(argv[4]),atoi(argv[3]),NULL);
 	
 	return 0;
 }

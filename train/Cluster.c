@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "Cluster.h"
 #include "CalculateDistance.h"
 
@@ -44,9 +45,32 @@ static void RenewClusterCenter(ClusterCenter *pClusterVec,unsigned int pKval,uns
 	}
 }
 
-static unsigned int JudgeIterationEnd(ClusterCenter *pClusterCenterVec)
+static unsigned int JudgeIterationEnd(ClusterCenter *pClusterVec,unsigned int pKval,unsigned int pCol)
 {
-	return 0;
+	unsigned int pJuageVal1=0;
+	double pJuageVal2=0;
+		for (unsigned int i = 0; i < pKval; ++i)
+		{
+			pJuageVal1+=pClusterVec[i].pAccumulationNum;
+		}
+		if(0==pJuageVal1)
+		{
+			return 1;
+		}
+		else
+		{
+			for (unsigned int i = 0; i < pKval; ++i)
+			{
+				pJuageVal2=0;
+				for (unsigned int j = 0; j < pCol; ++j)
+				{
+					pJuageVal2+=pow(pClusterVec[i].pAccumulation[j]-pClusterVec[i].pInitialCenter[j],2);
+				}
+				if(pJuageVal2>0.1)
+					return 1;
+			}
+			return 0;
+		}
 }
 double **GetClusterCenter(double **pTrainSampleFeatureVec,unsigned int pRow,unsigned int pCol,unsigned int *pRandomInitialCenter,unsigned int pKval,unsigned int pMaxIterationNum)
 {
@@ -80,9 +104,9 @@ double **GetClusterCenter(double **pTrainSampleFeatureVec,unsigned int pRow,unsi
 
 	unsigned int pIndex=0;
 
-	//judgeIterationEnd函数未完成
-	for (unsigned int k = 0; k < pMaxIterationNum && JudgeIterationEnd(pClusterCenterVec); ++k)
+	for (unsigned int k = 0; k < pMaxIterationNum && JudgeIterationEnd(pClusterCenterVec,pKval,pCol); ++k)
 	{
+		printf("Iteration Times is %d\n",k);
 		if(0==k)
 		{
 			;
@@ -98,6 +122,10 @@ double **GetClusterCenter(double **pTrainSampleFeatureVec,unsigned int pRow,unsi
 			AddRow(pClusterCenterVec[pIndex].pAccumulation,pTrainSampleFeatureVec[m],pCol);
 		}
 		GetKmeans(pClusterCenterVec,pKval,pCol);
+	}
+	for (unsigned int n = 0; n < pKval ; ++n)
+	{
+		printf("num of cluster%d is %d\n",n,pClusterCenterVec[n].pAccumulationNum);
 	}
 
 	return pCenterPointVec;
