@@ -26,6 +26,7 @@ int main(int argc,char **argv)
 	memset(pTemp,0,atoi(argv[3])*(sizeof(double)/sizeof(int)));
 
 	RandomNumVec = CreateRandomNum(atoi(argv[2]),atoi(argv[4]));
+	//unsigned int RandomNumVec[3]={5,11,23};
 
 	for (unsigned int i = 0; i < atoi(argv[4]); ++i)
 	{

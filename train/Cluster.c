@@ -41,8 +41,11 @@ static void RenewClusterCenter(ClusterCenter *pClusterVec,unsigned int pKval,uns
 	{
 		for (unsigned int j = 0; j < pCol; ++j)
 		{
-			pClusterVec[i].pInitialCenter[j]=pClusterVec[i].pAccumulation[j];
-			pClusterVec[i].pAccumulation[j]=0;
+			if(0!=pClusterVec[i].pAccumulationNum)
+			{
+				pClusterVec[i].pInitialCenter[j]=pClusterVec[i].pAccumulation[j];
+				pClusterVec[i].pAccumulation[j]=0;
+			}
 		}
 		pClusterVec[i].pAccumulationNum=0;
 	}
@@ -67,9 +70,12 @@ static unsigned int JudgeIterationEnd(ClusterCenter *pClusterVec,unsigned int pK
 				pJuageVal2=0;
 				for (unsigned int j = 0; j < pCol; ++j)
 				{
-					pJuageVal2+=pow(pClusterVec[i].pAccumulation[j]-pClusterVec[i].pInitialCenter[j],2);
+					if(0!=pClusterVec[i].pAccumulationNum)
+					{
+						pJuageVal2+=pow(pClusterVec[i].pAccumulation[j]-pClusterVec[i].pInitialCenter[j],2);
+					}
 				}
-				if(pJuageVal2>0.1)
+				if(pJuageVal2!=0)
 					return 1;
 			}
 			return 0;
